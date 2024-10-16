@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Generate Address WASM</title>
+    <script src="wasm_exec.js"></script>
+    <script>
+      const go = new Go();
+      WebAssembly.instantiateStreaming(
+        fetch("generate_address.wasm"),
+        go.importObject
+      ).then((result) => {
+        console.log("WASM module loaded successfully");
+        go.run(result.instance);
+      });
+
+      function callGenerateAddress() {
+        const channel = document.getElementById("channel").value;
+        const recipient = document.getElementById("recipient").value;
+        const result = generateAddress(channel, recipient);
+        document.getElementById("result").textContent = result;
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Generate Address</h1>
+    <div id="error" style="color: red;"></div>
+    <input id="channel" placeholder="Channel" />
+    <input id="recipient" placeholder="Recipient" />
+    <button onclick="callGenerateAddress()">Generate Address</button>
+    <p>Result: <span id="result"></span></p>
+  </body>
+</html>
